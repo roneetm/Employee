@@ -1,0 +1,1 @@
+In this tutorial we are going to learn how to create a new directory and file using Java NIO classes of Path and Files, if you are not aware of the methods available with these classes click here.
