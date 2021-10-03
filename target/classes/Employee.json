@@ -1,5 +1,1 @@
-{
-  "name": "Ada",
-  "about": "Ada Lovelace was the first programmer.",
-  "birthYear": 1815
-}
+{"employeeLevel":"Junior Developer","name":"Roneet Michael","joiningDate":"Sun Nov 10 00:00:00 IST 3895","id":1}Employee{id=2, name='Varun Mathur', joiningDate=Sun Nov 10 00:00:00 IST 3895, employeeLevel='Senior Developer'}
