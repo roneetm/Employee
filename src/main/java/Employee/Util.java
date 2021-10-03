@@ -24,20 +24,26 @@ public class Util {
     private static void writeInFile(Path path) throws IOException {
 
             Employee employee = new Employee(001L, "Roneet Michael", new Date(1995, Calendar.NOVEMBER, 10), "Junior Developer");
-            //Employee employee2 = new Employee(002L, "Varun Mathur", new Date(1995, Calendar.NOVEMBER, 10), "Senior Developer");
+            Employee employee2 = new Employee(002L, "Varun Mathur", new Date(1995, Calendar.NOVEMBER, 10), "Senior Developer");
 
+            JSONArray jsonArray = new JSONArray();
             JSONObject jsonObject = new JSONObject(employee);
-            //JSONArray jsonArray = new JSONArray(jsonObject);
 
-            Files.write(path, jsonObject.toString().getBytes());
+            //jsonArray.put(jsonObject);
+            //Files.write(path, jsonArray.toString().getBytes());
 //          Files.write(path, employee.toString().getBytes(), employee2.toString().getBytes());
 
             FileWriter fileWriter = new FileWriter(String.valueOf(path), true);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
+            JSONObject jsonObject1 = new JSONObject(employee2);
 
-            bufferedWriter.write(String.valueOf(new Employee(002L, "Varun Mathur", new Date(1995, Calendar.NOVEMBER, 10), "Senior Developer")));
-            bufferedWriter.close();
+//            fileWriter.write(String.valueOf(jsonObject1));
+//
+            bufferedWriter.write(String.valueOf(jsonArray.put(jsonObject)));
+            bufferedWriter.write(String.valueOf(jsonArray.put(jsonObject1)));
+
+        bufferedWriter.close();
     }
     public static void main(String[] args) throws IOException {
 
