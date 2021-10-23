@@ -1,56 +1,149 @@
 package Employee;
 
-import org.json.*;
 import java.io.*;
-import java.io.IOException;
-import java.nio.file.*;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Scanner;
 
 public class Util {
 
-    public static void readAllLines(Path fileLocation){
-        try{
-            List<String> data = Files.readAllLines(fileLocation);
-            for(String s: data){
-                System.out.println(s);
+    public static void addNewEmployee(File file) throws IOException {
+
+        Scanner scanner = new Scanner(System.in);
+        try (FileWriter fileWriter= new FileWriter(file, true);
+             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)){
+
+            System.out.println("Enter the ID of the Employee");
+            int id = scanner.nextInt();
+            System.out.println("Enter the Name of the Employee");
+            String name = scanner.next();
+            System.out.println("Enter the Joining Date of the Employee");
+            String date = scanner.next();
+            System.out.println("Enter the Level of the Employee");
+            String level = scanner.next();
+
+            bufferedWriter.write("{ ID:" +id + ", Name: " + name + ", Date of Joining: "+ date + ", Employee Level: "+ level + " },\n");
+            System.out.println("Record Added");
+
+        }catch (IOException ioException){
+            System.out.println("Unable to Add to the file");
+        }
+    }
+
+    public static void displayEmployee(File file){
+
+        String line;
+        try (FileReader fileReader = new FileReader(file);
+        BufferedReader bufferedReader = new BufferedReader(fileReader)){
+
+            while( (line = bufferedReader.readLine()) != null){
+                System.out.println(line);
             }
+
+        } catch (IOException ioException){
+            System.out.println("Unable to Read File");
         }
-        catch(Exception e){
-            e.printStackTrace();
+
+    }
+
+    public static void deleteEmployee(File file) throws IOException {
+
+        Scanner scanner = new Scanner(System.in);
+        int id = scanner.nextInt();
+        File tempFile = new File("temp.json");
+
+        FileWriter fileWriter = new FileWriter(tempFile);
+        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+        try( FileReader fileReader = new FileReader(file);
+             BufferedReader bufferedReader = new BufferedReader(fileReader)){
+
+            String line;
+
+            while((line = bufferedReader.readLine()) != null ){
+
+                if( line.contains(String.valueOf(id)) ){
+                    continue;
+                }
+                bufferedWriter.write(line);
+
+            }
+            bufferedWriter.close();
+            file.delete();
+            tempFile.renameTo(file);
+            System.out.println("Record Deleted");
+
+
+        }
+        catch (IOException ioException){
+            System.out.println("Unable to Delete from the file");
         }
     }
-    private static void writeInFile(Path path) throws IOException {
 
-            Employee employee = new Employee(001L, "Roneet Michael", new Date(1995, Calendar.NOVEMBER, 10), "Junior Developer");
-            Employee employee2 = new Employee(002L, "Varun Mathur", new Date(1995, Calendar.NOVEMBER, 10), "Senior Developer");
+    public static void updateEmployee(File file) throws IOException {
+        Scanner scanner = new Scanner(System.in);
 
-            JSONArray jsonArray = new JSONArray();
-            JSONObject jsonObject = new JSONObject(employee);
+        System.out.println("Enter the Employee ID you want to update");
+        int ID = scanner.nextInt();
 
-            //jsonArray.put(jsonObject);
-            //Files.write(path, jsonArray.toString().getBytes());
-//          Files.write(path, employee.toString().getBytes(), employee2.toString().getBytes());
+        System.out.println("Enter the new Name");
+        String name = scanner.next();
+        System.out.println("Enter the new joining date");
+        String date = scanner.next();
+        System.out.println("Enter the new Employee level");
+        String level = scanner.next();
 
-            FileWriter fileWriter = new FileWriter(String.valueOf(path), true);
+        File tempFile = new File("temp.json");
+        String line;
+        try(FileWriter fileWriter = new FileWriter(tempFile);
+            FileReader fileReader = new FileReader(file);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            BufferedReader bufferedReader = new BufferedReader(fileReader)){
 
-            JSONObject jsonObject1 = new JSONObject(employee2);
-
-//            fileWriter.write(String.valueOf(jsonObject1));
-//
-            bufferedWriter.write(String.valueOf(jsonArray.put(jsonObject)));
-            bufferedWriter.write(String.valueOf(jsonArray.put(jsonObject1)));
-
-        bufferedWriter.close();
+            while ( (line = bufferedReader.readLine()) != null){
+                if(line.contains(String.valueOf(ID))){
+                    System.out.println("Value Found");
+                    bufferedWriter.write("{ ID:" +ID + ", Name: " + name + ", Date of Joining: "+ date + ", Employee Level: "+ level + " },\n");
+                }
+                else
+                    bufferedWriter.write(line);
+            }
+            file.delete();
+            tempFile.renameTo(file);
+        }
     }
+
     public static void main(String[] args) throws IOException {
 
-        String fileLocation = "src/main/resources/Employee.json";
+        Scanner scanner = new Scanner(System.in);
+        File file = new File("src/main/resources/Employee.json");
+        FileReader fileReader = new FileReader(file);
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
 
-        writeInFile(Paths.get(fileLocation));
-        readAllLines(Paths.get(fileLocation));
+       while (true){
+           System.out.println("1. Add New Employee");
+           System.out.println("2. Edit an Employee Record");
+           System.out.println("3. Delete an Employee Record");
+           System.out.println("4. Display all employee");
+           System.out.println("5. Exit");
+           int choice = scanner.nextInt();
 
+           switch (choice){
+
+               case 1: addNewEmployee(file);
+                   break;
+
+               case 2: updateEmployee(file);
+                   break;
+
+               case 3: deleteEmployee(file);
+                   break;
+
+               case 4: displayEmployee(file);
+                   break;
+
+               case 5: System.exit(0);
+           }
+       }
     }
 }

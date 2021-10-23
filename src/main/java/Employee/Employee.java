@@ -3,16 +3,16 @@ package Employee;
 import java.util.Date;
 
 public class Employee {
-    private Long id;
+    private int id;
     private String name;
-    private Date joiningDate;
+    private String joiningDate;
     private String employeeLevel;
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -24,11 +24,11 @@ public class Employee {
         this.name = name;
     }
 
-    public Date getJoiningDate() {
+    public String getJoiningDate() {
         return joiningDate;
     }
 
-    public void setJoiningDate(Date joiningDate) {
+    public void setJoiningDate(String joiningDate) {
         this.joiningDate = joiningDate;
     }
 
@@ -43,7 +43,7 @@ public class Employee {
     public Employee() {
     }
 
-    public Employee(Long id, String name, Date joiningDate, String employeeLevel) {
+    public Employee(int id, String name, String joiningDate, String employeeLevel) {
         this.id = id;
         this.name = name;
         this.joiningDate = joiningDate;
@@ -52,7 +52,7 @@ public class Employee {
 
     @Override
     public String toString() {
-        return "Employee{" +
+        return "{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", joiningDate=" + joiningDate +
