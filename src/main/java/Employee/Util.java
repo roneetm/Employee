@@ -11,16 +11,16 @@ public class Util {
         try (FileWriter fileWriter= new FileWriter(file, true);
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)){
 
-            System.out.println("Enter the ID of the Employee");
+            System.out.println("Enter the ID of the Employee.ser");
             int id = scanner.nextInt();
-            System.out.println("Enter the Name of the Employee");
+            System.out.println("Enter the Name of the Employee.ser");
             String name = scanner.next();
-            System.out.println("Enter the Joining Date of the Employee");
+            System.out.println("Enter the Joining Date of the Employee.ser");
             String date = scanner.next();
-            System.out.println("Enter the Level of the Employee");
+            System.out.println("Enter the Level of the Employee.ser");
             String level = scanner.next();
 
-            bufferedWriter.write("{ ID:" +id + ", Name: " + name + ", Date of Joining: "+ date + ", Employee Level: "+ level + " },\n");
+            bufferedWriter.write("{ ID:" +id + ", Name: " + name + ", Date of Joining: "+ date + ", Employee.ser Level: "+ level + " },\n");
             System.out.println("Record Added");
 
         }catch (IOException ioException){
@@ -80,14 +80,14 @@ public class Util {
     public static void updateEmployee(File file) throws IOException {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Enter the Employee ID you want to update");
+        System.out.println("Enter the Employee.ser ID you want to update");
         int ID = scanner.nextInt();
 
         System.out.println("Enter the new Name");
         String name = scanner.next();
         System.out.println("Enter the new joining date");
         String date = scanner.next();
-        System.out.println("Enter the new Employee level");
+        System.out.println("Enter the new Employee.ser level");
         String level = scanner.next();
 
         File tempFile = new File("temp.json");
@@ -100,7 +100,7 @@ public class Util {
             while ( (line = bufferedReader.readLine()) != null){
                 if(line.contains(String.valueOf(ID))){
                     System.out.println("Value Found");
-                    bufferedWriter.write("{ ID:" +ID + ", Name: " + name + ", Date of Joining: "+ date + ", Employee Level: "+ level + " },\n");
+                    bufferedWriter.write("{ ID:" +ID + ", Name: " + name + ", Date of Joining: "+ date + ", Employee.ser Level: "+ level + " },\n");
                 }
                 else
                     bufferedWriter.write(line);
@@ -113,14 +113,14 @@ public class Util {
     public static void main(String[] args) throws IOException {
 
         Scanner scanner = new Scanner(System.in);
-        File file = new File("src/main/resources/Employee.json");
+        File file = new File("src/main/resources/Employee.ser.json");
         FileReader fileReader = new FileReader(file);
         BufferedReader bufferedReader = new BufferedReader(fileReader);
 
        while (true){
-           System.out.println("1. Add New Employee");
-           System.out.println("2. Edit an Employee Record");
-           System.out.println("3. Delete an Employee Record");
+           System.out.println("1. Add New Employee.ser");
+           System.out.println("2. Edit an Employee.ser Record");
+           System.out.println("3. Delete an Employee.ser Record");
            System.out.println("4. Display all employee");
            System.out.println("5. Exit");
            int choice = scanner.nextInt();
