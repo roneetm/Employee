@@ -11,25 +11,36 @@ import java.util.Scanner;
 public class UtilJSON implements Serializable {
 
     public static void addNewEmployee(ArrayList<Employee> employees) throws IOException {
-        Scanner scanner = new Scanner(System.in);
+
+        //Try with Resource to close resource automatically
         try (FileWriter fileWriter = new FileWriter("src/main/resources/Employee.json");
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
 
+            Scanner scanner = new Scanner(System.in);
+            // Scanning new employee details
             System.out.println("Enter the ID of the Employee");
             int id = scanner.nextInt();
+
             System.out.println("Enter the Name of the Employee");
             String name = scanner.next();
+
             System.out.println("Enter the Joining Date of the Employee");
             String date = scanner.next();
+
             System.out.println("Enter the Level of the Employee");
             String level = scanner.next();
+
+            // Creating Object of employee from user input value
             Employee employee = new Employee(id, name, date, level);
             try {
+                // Adding employee object to list of Employees
                 employees.add(employee);
+                // Writing List of Employees into JSON file
                 bufferedWriter.write(employees.toString());
                 System.out.println("Record Added");
 
                 try {
+                    // Serialising Objects for future use
                     FileOutputStream fileOutputStream = new FileOutputStream("src/main/resources/Employee.txt");
                     ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
                     objectOutputStream.writeObject(employees);
@@ -72,9 +83,11 @@ public class UtilJSON implements Serializable {
         while (iterator.hasNext())
         {
             Employee employee = iterator.next();
+            // If Employee ID matches record then delete
             if(employee.getId() == employeeId){
                 System.out.println("Employee Record Deleted");
                 iterator.remove();
+                // Updating the Txt & Json file after deleting employee details.
                 updateFile(employees);
                 break;
             }
@@ -82,7 +95,6 @@ public class UtilJSON implements Serializable {
                 System.out.println("No Records Found");
             }
         }
-        System.out.println("Collected"+ employees);
 
     } // Delete Method Close
 
@@ -116,7 +128,6 @@ public class UtilJSON implements Serializable {
                 System.out.println("No Records Found");
             }
         }
-        System.out.println("Collected"+ employees);
 
         try (FileReader fileReader = new FileReader("src/main/resources/Employee.json");
              BufferedReader bufferedReader = new BufferedReader(fileReader)) {
@@ -175,10 +186,12 @@ public class UtilJSON implements Serializable {
     } // Update File Method Closed
 
     public static void main(String[] args) throws IOException {
-        Scanner scanner = new Scanner(System.in);
+
         File file = new File("src/main/resources/Employee.json");
+        // Loading existing objects into List of Employees.
         ArrayList<Employee> employees = new ArrayList<>(Deserialize());
 
+        Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.println("1. Add New Employee");
             System.out.println("2. Edit an Employee Record");
