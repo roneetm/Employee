@@ -127,25 +127,16 @@ public class UtilJSON implements Serializable {
             else{
                 System.out.println("No Records Found");
             }
-        }
-
-        try (FileReader fileReader = new FileReader("src/main/resources/Employee.json");
-             BufferedReader bufferedReader = new BufferedReader(fileReader)) {
-
-
-        } // Try with Resource Closed
+        } // While loop closed
     } // Updated Method Closed
 
     public static ArrayList<Employee> Deserialize() {
 
-        String line;
         try {
             FileInputStream fis = new FileInputStream("src/main/resources/Employee.txt");
             ObjectInputStream ois = new ObjectInputStream(fis);
                     ArrayList<Employee> employees = (ArrayList) ois.readObject();
-//                    for (Employee employee : employees) {
-//                        System.out.println(employee);
-//                    }
+
             fis.close();
             ois.close();
             return employees;
