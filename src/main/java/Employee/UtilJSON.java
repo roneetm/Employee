@@ -10,10 +10,9 @@ import java.util.Scanner;
 
 public class UtilJSON implements Serializable {
 
-    public static void addNewEmployee(File file, ArrayList<Employee> employees) throws IOException {
-        File tempFile = new File("temp.json");
+    public static void addNewEmployee(ArrayList<Employee> employees) throws IOException {
         Scanner scanner = new Scanner(System.in);
-        try (FileWriter fileWriter = new FileWriter(file);
+        try (FileWriter fileWriter = new FileWriter("src/main/resources/Employee.json");
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
 
             System.out.println("Enter the ID of the Employee");
@@ -45,7 +44,7 @@ public class UtilJSON implements Serializable {
         } catch (IOException ioException) {
             System.out.println("Unable to Add to the file");
         }
-    }
+    } // Closed Add New Employee
 
     public static void displayEmployee(File file) {
 
@@ -61,7 +60,7 @@ public class UtilJSON implements Serializable {
             System.out.println("Unable to Read File");
         }
 
-    }
+    } // Closed Display Method
 
     public static void deleteEmployee(ArrayList<Employee> employees) throws IOException {
 
@@ -74,28 +73,24 @@ public class UtilJSON implements Serializable {
         {
             Employee employee = iterator.next();
             if(employee.getId() == employeeId){
-                employees.remove(employee);
                 System.out.println("Employee Record Deleted");
-                System.out.println(employees);
-             }
+                iterator.remove();
+                updateFile(employees);
+                break;
+            }
+            else{
+                System.out.println("No Records Found");
+            }
         }
-
-        try {
-            FileOutputStream fileOutputStream = new FileOutputStream("src/main/resources/Employee.txt");
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-            objectOutputStream.writeObject(employees);
-            System.out.println("Serialised");
-        } catch (IOException fileNotFoundException) {
-            fileNotFoundException.getMessage();
-        }
+        System.out.println("Collected"+ employees);
 
     } // Delete Method Close
 
-    public static void updateEmployee(File file) throws IOException {
+    public static void updateEmployee(ArrayList<Employee> employees) throws IOException {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Enter the Employee ID you want to update");
-        int ID = scanner.nextInt();
+        int employeeId = scanner.nextInt();
 
         System.out.println("Enter the new Name");
         String name = scanner.next();
@@ -104,24 +99,31 @@ public class UtilJSON implements Serializable {
         System.out.println("Enter the new Employee level");
         String level = scanner.next();
 
-        File tempFile = new File("temp.json");
-        String line;
-        try (FileWriter fileWriter = new FileWriter(tempFile);
-             FileReader fileReader = new FileReader(file);
-             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+        ListIterator<Employee> iterator = employees.listIterator();
+        while (iterator.hasNext())
+        {
+            Employee employee = iterator.next();
+            if(employee.getId() == employeeId){
+                System.out.println("Employee Record Found");
+                employee.setName(name);
+                employee.setJoiningDate(date);
+                employee.setEmployeeLevel(level);
+
+                updateFile(employees);
+                break;
+            }
+            else{
+                System.out.println("No Records Found");
+            }
+        }
+        System.out.println("Collected"+ employees);
+
+        try (FileReader fileReader = new FileReader("src/main/resources/Employee.json");
              BufferedReader bufferedReader = new BufferedReader(fileReader)) {
 
-            while ((line = bufferedReader.readLine()) != null) {
-                if (line.contains(String.valueOf(ID))) {
-                    System.out.println("Value Found");
-                    bufferedWriter.write("{ ID:" + ID + ", Name: " + name + ", Date of Joining: " + date + ", Employee Level: " + level + " },\n");
-                } else
-                    bufferedWriter.write(line);
-            }
-            file.delete();
-            tempFile.renameTo(file);
-        }
-    }
+
+        } // Try with Resource Closed
+    } // Updated Method Closed
 
     public static ArrayList<Employee> Deserialize() {
 
@@ -130,9 +132,9 @@ public class UtilJSON implements Serializable {
             FileInputStream fis = new FileInputStream("src/main/resources/Employee.txt");
             ObjectInputStream ois = new ObjectInputStream(fis);
                     ArrayList<Employee> employees = (ArrayList) ois.readObject();
-                    for (Employee employee : employees) {
-                        System.out.println(employee);
-                    }
+//                    for (Employee employee : employees) {
+//                        System.out.println(employee);
+//                    }
             fis.close();
             ois.close();
             return employees;
@@ -146,10 +148,33 @@ public class UtilJSON implements Serializable {
             c.printStackTrace();
             return null;
         } // Close catch
-    } // Close Deserialise Method
+    } // Closed Deserialize Method
+
+    public static void updateFile(ArrayList<Employee> employees) {
+
+        try (FileWriter fileWriter = new FileWriter("src/main/resources/Employee.json");
+             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
+            try {
+                bufferedWriter.write(employees.toString());
+                System.out.println("Record Updated");
+                try {
+                    FileOutputStream fileOutputStream = new FileOutputStream("src/main/resources/Employee.txt");
+                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+                    objectOutputStream.writeObject(employees);
+                    System.out.println("Serialised");
+                } catch (IOException fileNotFoundException) {
+                    fileNotFoundException.getMessage();
+                }
+
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException ioException) {
+            System.out.println("Unable to Add to the file");
+        }
+    } // Update File Method Closed
 
     public static void main(String[] args) throws IOException {
-
         Scanner scanner = new Scanner(System.in);
         File file = new File("src/main/resources/Employee.json");
         ArrayList<Employee> employees = new ArrayList<>(Deserialize());
@@ -165,11 +190,11 @@ public class UtilJSON implements Serializable {
             switch (choice) {
 
                 case 1:
-                    addNewEmployee(file, employees);
+                    addNewEmployee(employees);
                     break;
 
                 case 2:
-                    updateEmployee(file);
+                    updateEmployee(employees);
                     break;
 
                 case 3:
@@ -184,5 +209,5 @@ public class UtilJSON implements Serializable {
                     System.exit(0);
             } // Switch close
         } // While close
-    } // Main close
+    } // Main Method closed
 }
